@@ -3,7 +3,7 @@ Timer.__index = Timer
 
 local operationsMetatable = {} -- This will hook to goal and also current time tables
 
-function handleValuesBelowZero(index: number, currentTime: table)
+function formatDateTimeElements(index: number, currentTime: table)
     if index == 2 then
         return 12
     elseif index == 3 then
@@ -43,9 +43,7 @@ function operationsMetatable.__lt(t, v)
     -- selene: allow(unused_variable)
 	for index, keys in pairs(t) do
         -- selene: allow(empty_if)
-		if t[index] > v[index] then
-			-- nothing
-		else
+		if t[index] < v[index] then
 			return true
 		end
 	end
@@ -61,28 +59,54 @@ function operationsMetatable.__sub(t, v)
 			local tempResult = t[index] - v[index]
 			if tempResult ~= 0 then
 				if math.sign(tempResult) == -1 then
-					tempResult += handleValuesBelowZero(index, currentTime)
+					tempResult += formatDateTimeElements(index, currentTime)
 				end
 				returns[index] = tempResult
 			end
 		end
-		return returns
 	else
         -- selene: allow(unused_variable)
 		for index, values in pairs(v) do
 			local tempResult = v[index] - t[index]
 			if tempResult ~= 0 then
                 if math.sign(tempResult) == -1 then
-					tempResult += handleValuesBelowZero(index, currentTime)
+					tempResult += formatDateTimeElements(index, currentTime)
 				end
 				returns[index] = tempResult
 			end
 		end
-		return returns
 	end
+	
+	return returns
 end
 
-Timer.new = function(goal: string)
+function subTimes(timeTable1: DateTime, timeTable2: DateTime)
+	local returns = {0, 0, 0, 0, 0, 0}
+
+	local unixTime1 = timeTable1.UnixTimestamp
+	local unixTime2 = timeTable2.UnixTimestamp
+
+	local diff = math.abs(unixTime2 - unixTime1)
+	local A_YEAR = 31536000
+
+	if diff > A_YEAR then
+		repeat
+			returns[1] += 1
+			diff -= A_YEAR
+		until
+			A_YEAR > diff
+	end
+
+	local newUnixTime = DateTime.fromUnixTimestamp(diff):ToUniversalTime()
+	returns[2] = newUnixTime.Month
+	returns[3] = newUnixTime.Day
+	returns[4] = newUnixTime.Hour
+	returns[5] = newUnixTime.Minute
+	returns[6] = newUnixTime.Second
+	return returns
+end
+
+Timer.new = function(goal: string, useUnixTime: boolean)
     local timer = setmetatable({}, Timer)
 
     if goal then
@@ -94,13 +118,22 @@ Timer.new = function(goal: string)
                return nil
             end
         else
-            error("Goal needs to be a string.")
-            return nil
+			if useUnixTime then
+				timer.Goal = goal
+			else
+				error("Goal needs to be a string.")
+            	return nil
+			end
         end
     else
        error("You need to specify a goal with new timers.")
        return nil
     end
+
+	if useUnixTime then
+		timer.UseUnixTime = useUnixTime
+	end
+
     return timer
 end
 
@@ -108,65 +141,91 @@ function isOne(v)
 	return v == 1
 end
 
-function Timer:calculateUniversalTime(dt)
-	local seperatedStringsTable = string.split(dt, " ") -- This will include everything separately, including year, month, day of the month
-	setmetatable(seperatedStringsTable, operationsMetatable)
-	--[[
-		[1] = Year XXXX
-		[2] = Month XX
-		[3] = Day of the month XX
-		[4] = Hour XX
-		[5] = Minute XX
-		[6] = Second XX
-	--]]
-	if seperatedStringsTable == self.Goal then
-		return false -- finished
-	else
-		local result = self.Goal - seperatedStringsTable
-		local returnText = ""
-		if result[1] then
-			if isOne(result[1]) and result[1] ~= 0 then
-				returnText = returnText .. tostring(result[1]) .. " Year, "
+function createText(result)
+	local returnText = ""
+	if result[1] then
+		if result[1] ~= 0 then
+			if isOne(result[1]) then
+				returnText = returnText .. tostring(result[1]) .. " year, "
 			else
-				returnText = returnText .. tostring(result[1]) .. " Years, "
+				returnText = returnText .. tostring(result[1]) .. " years, "
 			end
 		end
-		if result[2] then
+	end
+	if result[2] then
+		if result[2] ~= 0 then
 			if isOne(result[2]) and result[2] ~= 0 then
-				returnText = returnText .. tostring(result[2]) .. " Month, "
+				returnText = returnText .. tostring(result[2]) .. " month, "
 			else
-				returnText = returnText .. tostring(result[2]) .. " Months, "
+				returnText = returnText .. tostring(result[2]) .. " months, "
 			end
 		end
-		if result[3] then
+	end
+	if result[3] then
+		if result[3] ~= 0 then
 			if isOne(result[3]) and result[3] ~= 0 then
-				returnText = returnText .. tostring(result[3]) .. " Day, "
+				returnText = returnText .. tostring(result[3]) .. " day, "
 			else
-				returnText = returnText .. tostring(result[3]) .. " Days, "
+				returnText = returnText .. tostring(result[3]) .. " days, "
 			end
 		end
-		if result[4] then
+	end
+	if result[4] then
+		if result[4] ~= 0 then
 			if isOne(result[4]) and result[4] ~= 0 then
-				returnText = returnText .. tostring(result[4]) .. " Hour, "
+				returnText = returnText .. tostring(result[4]) .. " hour, "
 			else
-				returnText = returnText .. tostring(result[4]) .. " Hours, "
+				returnText = returnText .. tostring(result[4]) .. " hours, "
 			end
 		end
-		if result[5] then
+	end
+	if result[5] then
+		if result[5] ~= 0 then
 			if isOne(result[5]) and result[5] ~= 0 then
-				returnText = returnText .. tostring(result[5]) .. " Minute, "
+				returnText = returnText .. tostring(result[5]) .. " minute, "
 			else
-				returnText = returnText .. tostring(result[5]) .. " Minutes, "
+				returnText = returnText .. tostring(result[5]) .. " minutes, "
 			end
 		end
-		if result[6] then
+	end
+	if result[6] then
+		if result[6] ~= 0 then
 			if isOne(result[6]) and result[6] ~= 0 then
-				returnText = returnText .. tostring(result[6]) .. " Second"
+				returnText = returnText .. tostring(result[6]) .. " second"
 			else
-				returnText = returnText .. tostring(result[6]) .. " Seconds"
+				returnText = returnText .. tostring(result[6]) .. " seconds"
 			end
 		end
-		return returnText
+	end
+	return returnText
+end
+
+function Timer:calculateUniversalTime(dt)
+	if self.UseUnixTime then
+		local result = subTimes(self.Goal, dt)
+		
+		if result == 0 then
+			return false
+		else
+			return createText(result)
+		end
+	else
+		local seperatedStringsTable = string.split(dt, " ") -- This will include everything separately, including year, month, day of the month
+		setmetatable(seperatedStringsTable, operationsMetatable)
+		--[[
+			[1] = Year XXXX
+			[2] = Month XX
+			[3] = Day of the month XX
+			[4] = Hour XX
+			[5] = Minute XX
+			[6] = Second XX
+		--]]
+		if seperatedStringsTable == self.Goal then
+			return false -- finished
+		else
+			local result = self.Goal - seperatedStringsTable
+			return createText(result)
+		end
 	end
 end
 
