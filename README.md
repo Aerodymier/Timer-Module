@@ -20,8 +20,8 @@ and then run ``wally install`` in your current directory.
 # Usage
 This module has two modes, one mode lets you set a goal with an unix timestamp and other one lets you set a goal with human readable format.
 
-## Using with Unix timestamp
-You can create a new Timer with the only parameter being ``DateTime.fromUnixTimestamp(unixTimestamp)``
+## Using with DateTime
+You can create a new Timer with the only parameter being a ``DateTime`` type:
 
 ```lua
 local newTimer = Timer.new(DateTime.fromUnixTimestamp(1672531201))
@@ -70,6 +70,13 @@ end
 ```
 
 Module returns a bool type when countdown ends and starts to count in reverse when goal is before the current date.
+Prints look like this:
+
+```
+ 7 months, 30 days, 1 hour, 59 minutes, 13 seconds
+```
+
+Module respects singular numbers and uses them with singular words.
 
 # Examples
 There are examples for both methods in src/Examples folder.
