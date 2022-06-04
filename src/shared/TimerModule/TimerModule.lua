@@ -161,7 +161,7 @@ local function createText(result)
 	return returnText
 end
 
-function Timer:calculateUniversalTime(dt)
+function Timer:calculateTime(dt)
 	if self.UseUnixTime then
 		local result = subTimes(self.Goal, dt)
 		
@@ -190,8 +190,9 @@ function Timer:calculateUniversalTime(dt)
 	end
 end
 
-Timer.new = function(goal: string, useUnixTime: boolean)
+Timer.new = function(goal: string | DateTime)
     local timer = setmetatable({}, Timer)
+	local useUnixTime = if typeof(goal) == "DateTime" then true else false
 
     if goal then
         if typeof(goal) == "string" then
@@ -205,7 +206,7 @@ Timer.new = function(goal: string, useUnixTime: boolean)
 			if useUnixTime then
 				timer.Goal = goal
 			else
-				error("Goal needs to be a string.")
+				error("Unknown type for goal, provided type: " .. typeof(goal))
             	return nil
 			end
         end
