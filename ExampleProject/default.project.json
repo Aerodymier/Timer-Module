@@ -10,7 +10,9 @@
 
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "$path": "Packages"
+      "Packages": {
+        "$path": "Packages"
+      }
     },
 
     "StarterPlayer": {
