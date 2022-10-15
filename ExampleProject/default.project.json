@@ -5,12 +5,12 @@
     
     "Workspace": {
       "$className": "Workspace",
-      "$path": "workspace"
+      "$path": "src/workspace"
     },
 
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "$path": "Packages"
+      "$path": "src/Packages"
     },
 
     "StarterPlayer": {
@@ -18,7 +18,7 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "Examples": {
-          "$path": "Examples"
+          "$path": "src/Examples"
         }
       }
     }
