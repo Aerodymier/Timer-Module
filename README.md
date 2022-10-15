@@ -9,13 +9,15 @@ This is a timer module which can be used with Luau to make countdowns.
 - Add this to your [dependencies],
 
 ```
-TimerModule = "aerodymier/timermodule^@0.1.0"
+TimerModule = "aerodymier/timermodule^@0.1.2"
 ```
 
 and then run ``wally install`` in your current directory.
 
 ## Instructions for Roblox Studio
 - You can get this model (https://www.roblox.com/library/9820188808/TimerModule) and drag that to your game.
+
+Another option is using the module file in Releases section, there's also an example place file.
 
 # Usage
 This module has two modes, one mode lets you set a goal with an unix timestamp and other one lets you set a goal with human readable format.
