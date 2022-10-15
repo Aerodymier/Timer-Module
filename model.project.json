@@ -1,9 +1,9 @@
 {
-    "name": "slidermodule",
+    "name": "timermodule",
     "tree": {
         "$className": "Folder",
         "src": {
-            "$path": "SliderModule"
+            "$path": "TimerModule"
         }
     }
 }
