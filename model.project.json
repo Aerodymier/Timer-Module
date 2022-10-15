@@ -1,8 +1,8 @@
 {
-    "name": "timermodule",
+    "name": "TimerModule",
     "tree": {
         "$className": "Folder",
-        "src": {
+        "TimerModule": {
             "$path": "TimerModule"
         }
     }
