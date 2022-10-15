@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Timer = require(ReplicatedStorage.TimerModule.TimerModule)
+local Timer = require(ReplicatedStorage.Packages.TimerModule)
 
 local newTimer = Timer.new(DateTime.fromUnixTimestamp(1672531201))
 

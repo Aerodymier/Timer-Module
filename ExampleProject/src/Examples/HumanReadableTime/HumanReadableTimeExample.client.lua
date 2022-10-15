@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Timer = require(ReplicatedStorage.TimerModule.TimerModule)
+local Timer = require(ReplicatedStorage.Packages.TimerModule)
 
 local newTimer = Timer.new("2023 11 1 12 0 1") -- YYYY MM DD HH MM SS, example: 2021 12 12 20 00 00
 

@@ -1,21 +1,6 @@
 {
-  "name": "Timer module",
-  "tree": {
-    "$className": "DataModel",
-
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
-      "$path": "src/shared"
-    },
-
-    "StarterPlayer": {
-      "$className": "StarterPlayer",
-      "StarterPlayerScripts": {
-        "$className": "StarterPlayerScripts",
-        "Examples": {
-          "$path": "src/Examples"
-        }
-      }
-    }
-  }
+	"name": "timermodule",
+	"tree": {
+		"$path": "TimerModule"
+	}
 }
